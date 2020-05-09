@@ -2,8 +2,8 @@
   <div id="app">
 
     <nav>
-      <div class="nav-wrapper blue darken-1">
-        <a href="#" class="brand-logo center">NETFLY MOVIES</a>
+      <div class="nav-wrapper black darken-1">
+        <a href="#" class="brand-logo center">CADASTRO DE CLIENTES</a>
       </div>
     </nav>
 
@@ -17,45 +17,36 @@
       
       <form @submit.prevent="create">
 
-          <label>Name</label>
-          <input type="text" placeholder="Name" v-model="movie.name">
-          <label>Description</label>
-          <input type="text" placeholder="Description" v-model="movie.description">
-          <label>Genre</label>
-          <input type="text" placeholder="Genre" v-model="movie.gender">
-          <label>Week</label>
-          <input type="number" placeholder="Week" v-model="movie.week" required>
+          <label>Nome</label>
+          <input type="text" placeholder="Nome" v-model="costumer.nome">
+          <label>Data de Nascimento</label>
+          <input type="text" class="datepicker" placeholder="Data de Nascimento" v-model="costumer.data_de_nascimento">
+          <label>Sexo</label>
+          <input type="text" placeholder="Sexo" v-model="costumer.sexo">
 
-          <button class="waves-effect waves-light btn-small">Save<i class="material-icons left">save</i></button>
+          <button class="waves-effect waves-light btn-small">Salvar<i class="material-icons left">save</i></button>
 
       </form>
-
-      <div class="input-field col s12">
-        <select>
-          <option value="" disabled selected>Choose a week</option>
-          <option v-for="movie of movies" :key="movie.id" :value="movie.week">{{ movie.week }}</option>
-        </select>
-      </div>
 
       <table>
         <thead>
           <tr>
-            <th>NAME</th>
-            <th>DESCRIPTION</th>
-            <th>GENRE</th>
-            <th>WEEK</th>
-            <th>OPTIONS</th>
+            <th>Nome</th>
+            <th>Data de Nascimento</th>
+            <th>Sexo</th>
+            <th>Data da Criação</th>
+            <th>Opções</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="movie of movies" :key="movie.id">
-            <td>{{ movie.name }}</td>
-            <td>{{ movie.description }}</td>
-            <td>{{ movie.gender }}</td>
-            <td>{{ movie.week }}</td>
+          <tr v-for="costumer of costumers" :key="costumer.id">
+            <td>{{ costumer.nome }}</td>
+            <td>{{ costumer.data_de_nascimento }}</td>
+            <td>{{ costumer.sexo }}</td>
+            <td>{{ costumer.criado_em }}</td>
             <td>
-              <button @click="edit(movie)" class="waves-effect btn-small blue darken-1"><i class="material-icons">create</i></button>
-              <button @click="remove(movie)" class="waves-effect btn-small red darken-1"><i class="material-icons">delete_sweep</i></button>
+              <button @click="edit(costumer)" class="waves-effect btn-small blue darken-1"><i class="material-icons">create</i></button>
+              <button @click="remove(costumer)" class="waves-effect btn-small red darken-1"><i class="material-icons">delete_sweep</i></button>
             </td>
           </tr>
         </tbody>
@@ -67,21 +58,20 @@
 
 <script>
 
-import Movie from './services/movies'
+import Costumer from './services/costumers'
 
 export default {
 
   data(){
     return {
-      movie: {
+      costumer: {
         id: '',
-        name: '',
-        description: '',
-        gender: '',
-        week: ''
+        nome: '',
+        data_de_nascimento: '',
+        sexo: ''
       },
 
-      movies: [],
+      costumers: [],
       errors: []
     }
   },
@@ -93,37 +83,37 @@ export default {
   methods: {
 
     list() {
-      Movie.list().then(response => {
-      this.movies = response.data.data
+      Costumer.list().then(response => {
+      this.costumers = response.data.data
     })
     },
 
     create() {
 
-      if(!this.movie.id)
+      if(!this.costumer.id)
       {
-        Movie.create(this.movie).then(response => {
-          var movieName = response.data.data.name
+        Costumer.create(this.costumer).then(response => {
+          var costumerNome = response.data.data.nome
           if(response.data.code >= 300) 
           {
             this.errors = response.data.data
           } else {
-            this.movie = {}
-            alert('Movie ' + movieName + ' created !')
+            this.costumer = {}
+            alert('Costumer ' + costumerNome + ' created !')
             this.list() 
             this.errors = []
           }
         })
 
       } else {
-        Movie.uptade(this.movie).then(response => {
-          var movieName = response.data.data.name
+        Costumer.uptade(this.costumer).then(response => {
+          var costumerNome = response.data.data.nome
           if(response.data.code >= 300) 
           {
             this.errors = response.data.data
           } else {
-            this.movie = {}
-            alert('Movie ' + movieName + ' updated !')
+            this.costumer = {}
+            alert('Costumer ' + costumerNome + ' updated !')
             this.list() 
             this.errors = []
           }
@@ -131,12 +121,12 @@ export default {
       }
     },
 
-    edit(movie) {
-      this.movie = movie
+    edit(costumer) {
+      this.costumer = costumer
     },
 
-    remove(movie) {
-      Movie.delete(movie).then(response => {
+    remove(costumer) {
+      Costumer.delete(costumer).then(response => {
         if(response.data.code >= 300) 
           {
             this.errors = response.data.data
